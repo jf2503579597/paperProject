@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ProfessorDao">
+	<select id="findProfessor" parameterType="professor" resultMap="resultMap">
+		select id, professor_name from professor
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and</if>
+				<if test="professorName != null">professor_name = #{professorName} and</if>
+			</trim>
+		</where>
+		<if test="pageNum != null and pageSize != null">
+			limit #{pageNum}, #{pageSize}
+		</if>
+	</select>
+
+	<resultMap id="resultMap" type="professor">
+		<result property="id" column="id"/>
+		<result property="professorName" column="professor_name"/>
+	</resultMap>
+
+	<insert id="insertProfessor" parameterType="professor">
+		insert into professor(
+		<trim suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="professorName != null">professor_name, </if>
+		</trim>
+		) values(
+		<trim suffixOverrides=",">
+			<if test="id != null">#{id}, </if>
+			<if test="professorName != null">#{professorName}, </if>
+		</trim>
+		)
+	</insert>
+
+	<delete id="deleteProfessor" parameterType="professor">
+		delete from professor
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and</if>
+				<if test="professorName != null">professor_name = #{professorName} and</if>
+			</trim>
+		</where>
+	</delete>
+
+</mapper>

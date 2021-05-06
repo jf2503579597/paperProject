@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.UserDao">
+	<select id="findUser" parameterType="user" resultMap="resultMap">
+		select
+			u.id,
+			u.card,
+			u.name,
+			u.gender,
+		    u.password,
+			u.birthday,
+			u.professor_id,
+			p.professor_name p_name,
+			u.college_id,
+			c.coll_name c_name,
+			u.major_id,
+			m.major_name m_name,
+			u.auth_id,
+			a.name a_name,
+			u.create_time,
+			u.update_time
+		from
+			user u
+			left join
+				professor p
+			on
+				u.professor_id = p.id
+			left join
+				college c
+			on
+				u.college_id = c.id
+			left join
+				major m
+			on
+				u.major_id = m.id
+			left join
+				authority a
+			on
+				u.auth_id = a.id
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">u.id = #{id} and </if>
+				<if test="card != null">u.card = #{card} and </if>
+				<if test="name != null">u.name = #{name} and </if>
+				<if test="professor != null">u.professor_id = #{professor.id} and </if>
+				<if test="college != null">u.college_id = #{college.id} and </if>
+				<if test="major != null">u.major_id = #{major.id} and </if>
+				<if test="authority != null">u.auth_id = #{authority.id} and </if>
+			</trim>
+		</where>
+		<if test="pageNum != null and pageSize != null">
+			limit #{pageNum}, #{pageSize}
+		</if>
+	</select>
+	<resultMap id="resultMap" type="user">
+		<result property="id" column="id"/>
+		<result property="card" column="card"/>
+		<result property="name" column="name"/>
+		<result property="gender" column="gender"/>
+		<result property="password" column="password"/>
+		<result property="birthday" column="birthday"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateTime" column="update_time"/>
+		<association property="professor" javaType="professor">
+			<result property="id" column="professor_id"/>
+			<result property="professorName" column="p_name"/>
+		</association>
+		<association property="college" javaType="college">
+			<result property="id" column="college_id"/>
+			<result property="collName" column="c_name"/>
+		</association>
+		<association property="major" javaType="major">
+			<result property="id" column="major_id"/>
+			<result property="majorName" column="m_name"/>
+		</association>
+		<association property="authority" javaType="authority">
+			<result property="id" column="auth_id"/>
+			<result property="name" column="a_name"/>
+		</association>
+	</resultMap>
+
+	<update id="updateUser" parameterType="user">
+		update
+			user
+		set
+		<trim suffixOverrides=",">
+			<if test="name != null">name = #{name},</if>
+			<if test="gender != null">gender = #{gender},</if>
+			<if test="password != null">password = #{password},</if>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="professor != null">professor_id = #{professor.id},</if>
+			<if test="college != null">college_id = #{college.id},</if>
+			<if test="major != null">major_id = #{major.id},</if>
+			<if test="authority != null">auth_id = #{authority.id},</if>
+		</trim>
+		where
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and </if>
+				<if test="card != null">card = #{card} and </if>
+			</trim>
+	</update>
+
+	<insert id="insertUser" parameterType="user">
+		insert into user(
+			<trim suffixOverrides=",">
+				<if test="id != null">id, </if>
+				<if test="card != null">card, </if>
+				<if test="name != null">name, </if>
+				<if test="gender != null">gender, </if>
+				<if test="password != null">password, </if>
+				<if test="birthday != null">birthday, </if>
+				<if test="professor != null">professor_id, </if>
+				<if test="college != null">college_id, </if>
+				<if test="major != null">major_id, </if>
+				<if test="authority != null">auth_id</if>
+			</trim>
+		) values(
+		<trim suffixOverrides=",">
+			<if test="id != null">#{id}, </if>
+			<if test="card != null">#{card}, </if>
+			<if test="name != null">#{name}, </if>
+			<if test="gender != null">#{gender}, </if>
+			<if test="password != null">#{password}, </if>
+			<if test="birthday != null">#{birthday}, </if>
+			<if test="professor != null">#{professor.id}, </if>
+			<if test="college != null">#{college.id}, </if>
+			<if test="major != null">#{major.id}, </if>
+			<if test="authority != null">#{authority.id}</if>
+		</trim>
+		)
+	</insert>
+
+	<delete id="deleteUser" parameterType="user">
+		delete from user
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and </if>
+				<if test="card != null">card = #{card} and </if>
+				<if test="name != null">name = #{name} and </if>
+				<if test="professor != null">professor_id = #{professor.id} and </if>
+				<if test="college != null">college_id = #{college.id} and </if>
+				<if test="major != null">major_id = #{major.id} and </if>
+				<if test="authority != null">auth_id = #{authority.id} and </if>
+			</trim>
+		</where>
+	</delete>
+</mapper>

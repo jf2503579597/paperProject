@@ -1,0 +1,23 @@
+@charset "UTF-8";
+.usertable {
+	border: 2px solid #EEEEEE;
+	border-collapse: separate;
+	border-spacing: 10px;
+	padding: 40px;
+	box-sizing: border-box;
+	width: 520px;
+	margin: 0 auto;
+	border-radius: 6px;
+}
+
+.imgdiv {
+	margin: 0 auto;
+	width: 215px;
+	height: 215px;
+	border: 1px solid #EEEEEE;
+}
+
+img {
+	width: 215px;
+	height: 215px;
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.CollegeDao">
+	<select id="findCollege" parameterType="college" resultMap="resultMap">
+		select id, coll_name from college
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and</if>
+				<if test="collName != null">coll_name = #{collName} and</if>
+			</trim>
+		</where>
+		<if test="pageNum != null and pageSize != null">
+			limit #{pageNum}, #{pageSize}
+		</if>
+	</select>
+	<resultMap id="resultMap" type="college">
+		<result property="id" column="id"/>
+		<result property="collName" column="coll_name"/>
+	</resultMap>
+
+	<insert id="insertCollege" parameterType="college">
+		insert into college(
+			<trim suffixOverrides=",">
+				<if test="id != null">id, </if>
+				<if test="collName != null">coll_name, </if>
+			</trim>
+		) values(
+			<trim suffixOverrides=",">
+				<if test="id != null">#{id}, </if>
+				<if test="collName != null">#{collName}, </if>
+			</trim>
+		)
+	</insert>
+
+	<delete id="deleteCollege" parameterType="college">
+		delete from college
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and</if>
+				<if test="collName != null">coll_name = #{collName} and</if>
+			</trim>
+		</where>
+	</delete>
+</mapper>

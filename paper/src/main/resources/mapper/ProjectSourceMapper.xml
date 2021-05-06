@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ProjectSourceDao">
+	<select id="findProjectSource" parameterType="map" resultMap="resultMap">
+		select
+		id,
+		source_name
+		from
+		project_source
+		<where>
+			<trim suffixOverrides="and">
+				<if test="projectSource != null">
+					<if test="projectSource.id != null">id = #{projectSource.id}</if>
+					<if test="projectSource.sourceName != null">source_name = #{projectSource.sourceName}</if>
+				</if>
+			</trim>
+		</where>
+		<if test="pageNum != null and pageSize != null">
+			limit #{pageNum}, #{pageSize}
+		</if>
+	</select>
+	<resultMap id="resultMap" type="projectSource">
+		<result property="id" column="id"/>
+		<result property="sourceName" column="source_name"/>
+	</resultMap>
+
+	<insert id="insertProjectSource" parameterType="projectSource">
+		insert into project_source(
+		<trim suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="sourceName != null">source_name,</if>
+		</trim>
+		) values(
+		<trim suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="sourceName != null">#{sourceName},</if>
+		</trim>
+		)
+	</insert>
+
+	<delete id="deleteProjectSource" parameterType="projectSource">
+		delete from
+			project_source
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and</if>
+				<if test="sourceName != null">source_name = #{sourceName} and</if>
+			</trim>
+		</where>
+	</delete>
+</mapper>

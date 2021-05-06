@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.SubjectDao">
+	<select id="findSubject" parameterType="map" resultMap="resultMap">
+		select
+		    id,
+		    sub_name
+		from
+		    subject
+		<where>
+			<trim suffixOverrides="and">
+				<if test="subject != null">
+					<if test="subject.id != null">id = #{subject.id}</if>
+					<if test="subject.subName != null">sub_name = #{subject.subName}</if>
+				</if>
+			</trim>
+		</where>
+		<if test="pageNum != null and pageSize != null">
+			limit #{pageNum}, #{pageSize}
+		</if>
+	</select>
+	<resultMap id="resultMap" type="subject">
+		<result property="id" column="id"/>
+		<result property="subName" column="sub_name"/>
+	</resultMap>
+
+	<insert id="insertSubject" parameterType="subject">
+		insert into subject(
+			<trim suffixOverrides=",">
+				<if test="id != null">id,</if>
+				<if test="subName != null">sub_name,</if>
+			</trim>
+		) values(
+			<trim suffixOverrides=",">
+				<if test="id != null">#{id},</if>
+				<if test="subName != null">#{subName},</if>
+			</trim>
+		)
+	</insert>
+
+	<delete id="deleteSubject" parameterType="subject">
+		delete from
+		        subject
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and</if>
+				<if test="subName != null">sub_name = #{subName} and</if>
+			</trim>
+		</where>
+	</delete>
+</mapper>

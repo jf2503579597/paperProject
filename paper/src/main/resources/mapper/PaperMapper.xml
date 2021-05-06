@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.PaperDao">
+	<select id="findPaperByQuery" parameterType="paper" resultMap="resultMap">
+		select
+		paper.id,
+		paper.title,
+		paper.period_id,
+		pd.period_name period_name,
+		paper.period_no,
+		paper.sub_id,
+		sub.sub_name sub_name,
+		paper.perid_level_id,
+		pl.level_name level_name,
+		paper.user_id,
+		user.card user_card,
+		user.name user_name,
+
+		paper.exam,
+
+		paper.project_source_id,
+		ps.source_name source_name,
+
+		paper.create_time,
+		paper.update_time,
+		paper.download_address
+		from
+		paper
+		left join
+		periodical pd
+		on
+		paper.period_id = pd.id
+		left join
+		subject sub
+		on
+		paper.sub_id = sub.id
+		left join
+		periodical_level pl
+		on
+		paper.perid_level_id = pl.id
+		left join
+		user
+		on
+		paper.user_id = user.id
+		left join
+		project_source ps
+		on
+		paper.project_source_id = ps.id
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">paper.id = #{id} and </if>
+				<if test="title != null">paper.title = #{title} and </if>
+				<if test="periodical != null">paper.period_id = #{periodical.id} and </if>
+				<if test="periodNo != null">paper.period_no = #{periodNo} and </if>
+				<if test="subject != null">paper.sub_id = #{subject.id} and </if>
+				<if test="periodicalLevel != null">paper.perid_level_id = #{periodicalLevel.id} and </if>
+				<if test="projectSource != null">paper.project_source_id = #{projectSource.id} and </if>
+				<if test="user != null">paper.user_id = #{user.id} and </if>
+				<if test="exam != null">paper.exam = #{exam} and </if>
+				<if test="downloadAddress != null">paper.download_address = #{downloadAddress} and</if>
+			</trim>
+		</where>
+		<trim suffixOverrides=",">
+			<if test="pageNum != null and pageSize != null">
+				limit #{pageNum}, #{pageSize}
+			</if>
+		</trim>
+	</select>
+	<resultMap id="resultMap" type="paper">
+		<result property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="periodNo" column="period_no"/>
+		<result property="exam" column="exam"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="downloadAddress" column="download_address"/>
+		<association property="periodical" javaType="periodical">
+			<result property="id" column="period_id"/>
+			<result property="periodName" column="period_name"/>
+		</association>
+		<association property="subject" javaType="subject">
+			<result property="id" column="sub_id"/>
+			<result property="subName" column="sub_name"/>
+		</association>
+		<association property="periodicalLevel" javaType="periodicalLevel">
+			<result property="id" column="perid_level_id"/>
+			<result property="levelName" column="level_name"/>
+		</association>
+		<association property="projectSource" javaType="projectSource">
+			<result property="id" column="project_source_id"/>
+			<result property="sourceName" column="source_name"/>
+		</association>
+		<association property="user" javaType="user">
+			<result property="id" column="user_id"/>
+			<result property="card" column="user_card"/>
+			<result property="name" column="user_name"/>
+		</association>
+	</resultMap>
+
+	<delete id="deletePaper" parameterType="paper">
+		delete from
+			paper
+		<where>
+			<trim suffixOverrides="and">
+				<if test="id != null">id = #{id} and </if>
+				<if test="title != null">title = #{title} and </if>
+				<if test="periodical != null">period_id = #{periodical.id} and </if>
+				<if test="periodNo != null">period_no = #{periodNo} and </if>
+				<if test="subject != null">sub_id = #{subject.id} and </if>
+				<if test="periodicalLevel != null">perid_level_id = #{periodicalLevel.id} and </if>
+				<if test="projectSource != null">project_source_id = #{projectSource.id} and </if>
+				<if test="user != null">user_id = #{user.id} and </if>
+				<if test="exam != null">exam = #{exam} and </if>
+			</trim>
+		</where>
+	</delete>
+
+	<insert id="insertPaper" parameterType="paper">
+		insert into paper(
+			<trim suffixOverrides=",">
+				<if test="id != null">id, </if>
+				<if test="title != null">title, </if>
+				<if test="periodical != null">period_id, </if>
+				<if test="periodNo != null">period_no, </if>
+				<if test="subject != null">sub_id, </if>
+				<if test="periodicalLevel != null">perid_level_id, </if>
+				<if test="projectSource != null">project_source_id, </if>
+				<if test="user != null">user_id, </if>
+				<if test="exam != null">exam, </if>
+				<if test="downloadAddress != null">download_address, </if>
+			</trim>
+		) values(
+			<trim suffixOverrides=",">
+				<if test="id != null">#{id}, </if>
+				<if test="title != null">#{title}, </if>
+				<if test="periodical != null">#{periodical.id}, </if>
+				<if test="periodNo != null">#{periodNo}, </if>
+				<if test="subject != null">#{subject.id}, </if>
+				<if test="periodicalLevel != null">#{periodicalLevel.id}, </if>
+				<if test="projectSource != null">#{projectSource.id}, </if>
+				<if test="user != null">#{user.id}, </if>
+				<if test="exam != null">#{exam}, </if>
+				<if test="downloadAddress != null">#{downloadAddress}, </if>
+			</trim>
+		)
+	</insert>
+
+	<update id="updatePaper" parameterType="paper">
+		update paper set
+			<trim suffixOverrides=",">
+				<if test="title != null">title = #{title}, </if>
+				<if test="periodical != null">period_id = #{periodical.id}, </if>
+				<if test="periodNo != null">period_no = #{periodNo}, </if>
+				<if test="subject != null">sub_id = #{subject.id}, </if>
+				<if test="periodicalLevel != null">perid_level_id = #{periodicalLevel.id}, </if>
+				<if test="projectSource != null">project_source_id = #{projectSource.id}, </if>
+				<if test="user != null">user_id = #{user .id}, </if>
+				<if test="exam != null">exam = #{exam}, </if>
+		    	<if test="downloadAddress != null">download_address = #{downloadAddress}</if>
+			</trim>
+		where id = #{id}
+	</update>
+</mapper>

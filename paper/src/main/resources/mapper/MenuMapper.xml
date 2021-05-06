@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.MenuDao">
+	<select id="findMenuListByAuthId" resultMap="resultMap">
+		select
+			menu.parent_id, menu.id, menu.text, parent.text parent_text, menu.url, menu.icon
+		from
+			menu
+		join
+			authority_menu am
+		on
+		    am.auth_id=#{id}
+		left join
+			menu parent
+		on
+			menu.parent_id = parent.id
+		where
+		      menu.id=am.menu_id
+	</select>
+	<resultMap id="resultMap" type="menu">
+		<result property="id" column="id"/>
+		<result property="menuName" column="text"/>
+		<result property="url" column="url"/>
+		<result property="icon" column="icon"/>
+		<association property="parentMenu" javaType="menu">
+			<result property="id" column="parent_id"/>
+			<result property="menuName" column="parent_text"/>
+		</association>
+	</resultMap>
+</mapper>
