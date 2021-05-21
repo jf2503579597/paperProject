@@ -48,9 +48,9 @@
 	<body class="hold-transition skin-blue sidebar-mini">
 		<div class="wrapper">
 			<header class="main-header">
-				<a href="index2.html" class="logo">
+				<a href="#" class="logo">
 					<span class="logo-mini"><b>A</b>LT</span>
-					<span class="logo-lg"><b>Admin</b>LTE</span>
+					<span class="logo-lg"><b>商洛学院</b>SLXY</span>
 				</a>
 				<nav class="navbar navbar-static-top">
 					<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -77,12 +77,11 @@
 			<aside class="main-sidebar">
 				<section class="sidebar">
 					<div class="user-panel">
-						<div class="pull-left image">
-							<img src="../static/img/avatar04.png" class="img-circle" alt="User Image">
+						<div class="pull-left image" style="width: 50px; height: 50px">
+							<img src="../static/img/slxylo.png"  width="100" style="border-radius: 25px">
 						</div>
 						<div class="pull-left info">
-							<p>Alexander Pierce</p>
-							<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+							<p>科研论文管理系统</p>
 						</div>
 					</div>
 					<ul class="sidebar-menu" data-widget="tree">
@@ -140,10 +139,9 @@
 			</div>
 			<footer class="main-footer">
 				<div class="pull-right hidden-xs">
-					<b>Version</b> 2.0.0
+					<b>作者：</b> 金甫
 				</div>
-				<strong>Copyright &copy; 2020-2021 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rights
-				reserved.
+				<strong> &copy; 2020-2021 <a href="#">商洛学院专用</a>.</strong> 侵权必究
 			</footer>
 			<div class="control-sidebar-bg"></div>
 		</div>

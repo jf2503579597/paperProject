@@ -86,6 +86,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public PageVO<User> getUserByPage(PageVO<User> pageVO) throws Exception {
 		User user = new User();
+		if (pageVO.getList() != null && !pageVO.getList().isEmpty()) {
+			user = pageVO.getList().get(0);
+		}
 		Integer pageNum = (pageVO.getPageNum() - 1) * pageVO.getPageSize();
 		Integer pageSize = pageVO.getPageSize();
 		user.setPageNum(pageNum);

@@ -19,6 +19,7 @@
 		user.name user_name,
 
 		paper.exam,
+		paper.exam_file,
 
 		paper.project_source_id,
 		ps.source_name source_name,
@@ -57,9 +58,23 @@
 				<if test="subject != null">paper.sub_id = #{subject.id} and </if>
 				<if test="periodicalLevel != null">paper.perid_level_id = #{periodicalLevel.id} and </if>
 				<if test="projectSource != null">paper.project_source_id = #{projectSource.id} and </if>
-				<if test="user != null">paper.user_id = #{user.id} and </if>
+				<if test="user != null">
+					<if test="user.id != null">paper.user_id = #{user.id} and </if>
+					<if test="user.name != null">user.name like concat('%', #{user.name}, '%') and </if>
+					<if test="user.college != null">
+						<if test="user.college.id != null">user.college_id = #{user.college.id} and </if>
+					</if>
+					<if test="user.major != null">
+						<if test="user.major.id != null">user.major_id = #{user.major.id} and </if>
+					</if>
+					<if test="user.professor != null">
+						<if test="user.professor.id != null">user.professor_id = #{user.professor.id} and </if>
+					</if>
+				</if>
 				<if test="exam != null">paper.exam = #{exam} and </if>
+				<if test="examFile != null">paper.exam_file = #{examFile} and </if>
 				<if test="downloadAddress != null">paper.download_address = #{downloadAddress} and</if>
+				<if test="createYear != null">paper.create_time like concat('%', #{createYear}, '%') and </if>
 			</trim>
 		</where>
 		<trim suffixOverrides=",">
@@ -73,6 +88,7 @@
 		<result property="title" column="title"/>
 		<result property="periodNo" column="period_no"/>
 		<result property="exam" column="exam"/>
+		<result property="examFile" column="exam_file"/>
 		<result property="createTime" column="create_time"/>
 		<result property="updateTime" column="update_time"/>
 		<result property="downloadAddress" column="download_address"/>
@@ -113,6 +129,7 @@
 				<if test="projectSource != null">project_source_id = #{projectSource.id} and </if>
 				<if test="user != null">user_id = #{user.id} and </if>
 				<if test="exam != null">exam = #{exam} and </if>
+				<if test="examFile != null">exam_file = #{examFile} and </if>
 			</trim>
 		</where>
 	</delete>
@@ -129,6 +146,7 @@
 				<if test="projectSource != null">project_source_id, </if>
 				<if test="user != null">user_id, </if>
 				<if test="exam != null">exam, </if>
+				<if test="examFile != null">exam_file, </if>
 				<if test="downloadAddress != null">download_address, </if>
 			</trim>
 		) values(
@@ -142,6 +160,7 @@
 				<if test="projectSource != null">#{projectSource.id}, </if>
 				<if test="user != null">#{user.id}, </if>
 				<if test="exam != null">#{exam}, </if>
+				<if test="examFile != null">#{examFile}, </if>
 				<if test="downloadAddress != null">#{downloadAddress}, </if>
 			</trim>
 		)
@@ -158,6 +177,7 @@
 				<if test="projectSource != null">project_source_id = #{projectSource.id}, </if>
 				<if test="user != null">user_id = #{user .id}, </if>
 				<if test="exam != null">exam = #{exam}, </if>
+				<if test="examFile != null">exam_file = #{examFile}, </if>
 		    	<if test="downloadAddress != null">download_address = #{downloadAddress}</if>
 			</trim>
 		where id = #{id}

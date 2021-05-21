@@ -116,26 +116,20 @@
 						}, {
 							targets: 4,
 							data: function (row, type, val, meta) {
-								// 作者姓名
-								if (row.user == null || row.user.major == null) {
-									return null;
-								}
-								return row.user.major.majorName;
-							}
-						}, {
-							targets: 5,
-							data: function (row, type, val, meta) {
-								var deleteBtn = "<a href='javascript:checkSuccess(" + row.id + ")' class='btn btn-success btn-xs'><i class='fa fa-hand-peace-o'></i>&nbsp;审核</a>"
+								var checkBtn = "<a href='javascript:checkSuccess(" + row.id + ")' class='btn btn-success btn-xs'><i class='fa fa-hand-peace-o'></i>&nbsp;通过</a>"
 								var detailsBtn = "<a href='javascript:openDetailsModel(" + row.id + ")' class='btn btn-success btn-xs'><i class='fa fa-keyboard-o'></i>&nbsp;详情</a>";
-								return detailsBtn + "&nbsp;" + deleteBtn;
+								var deleteBtn = "<a href='javascript:deletePaper(" + row.id + ")' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>&nbsp;拒绝</a>"
+								return detailsBtn + "&nbsp;" + checkBtn + "&nbsp;" + deleteBtn;
 							}
 						}
 					]
 				});
 			});
+			// 下载
 			function download(id) {
 				location.href = "download?id=" + id;
 			}
+			// 审核通过
 			function checkSuccess(id) {
 				var flag = confirm("确定审核通过？");
 				if (flag) {
@@ -152,6 +146,30 @@
 								location.reload()
 							} else {
 								alert("审核失败！")
+							}
+						}
+					});
+				}
+			}
+			// 审核拒绝
+			function deletePaper(id) {
+				var flag = prompt("请输入审核失败理由！", "无");
+				// 拒绝理由
+				if (flag) {
+					$.ajax({
+						url: "fail",
+						type: "post",
+						data: {
+							"id": id,
+							"examFile": flag
+						},
+						dataType: "json",
+						success: function (data) {
+							if (data) {
+								alert("拒绝成功！")
+								location.reload()
+							} else {
+								alert("拒绝成功！")
 							}
 						}
 					});
@@ -178,7 +196,6 @@
 							<th>标题</th>
 							<th>期号</th>
 							<th>作者</th>
-							<th>作者专业</th>
 							<th>操作</th>
 						</tr>
 						</thead>

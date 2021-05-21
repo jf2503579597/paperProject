@@ -12,6 +12,48 @@
 		<script type="application/javascript" src="../static/js/jquery.dataTables.min.js"></script>
 		<script type="application/javascript">
 			$(function () {
+				onchangeTest();
+				// 异步获取学院信息、专业信息、职称信息
+				$.ajax({
+					url: "getData",
+					type: "post",
+					dataType: "json",
+					success: function (data) {
+						// 获取的 data 就是一个 map 集合
+						// 分别获取学院、职称
+						var collegeList = data.collegeList;
+						var professorList = data.professorList
+
+						// 打印学院信息
+						options = "<option value=0>根据学院信息查询</option>"
+						for (var i = 0; i < collegeList.length; i++) {
+							options = options + "<option value=" + collegeList[i].id + ">" + collegeList[i].collName + "</option>"
+						}
+						$("#college").html(options)
+
+						// 打印学院信息信息
+						options = "<option value=-1>请先选择学院信息</option>"
+						$("#major").html(options)
+
+						// 打印职称信息
+						options = "<option value=0>根据职称信息查询</option>"
+						for (var i = 0; i < professorList.length; i++) {
+							options = options + "<option value=" + professorList[i].id + ">" + professorList[i].professorName + "</option>"
+						}
+						$("#professor").html(options)
+					}
+				})
+			})
+
+			/**
+			 * 赋值函数
+			 */
+			function onchangeTest() {
+				var college = $("#college").val();
+				var major = $("#major").val();
+				var professor = $("#professor").val();
+				var name = $("#name").val();
+				$("#myTable").dataTable().fnDestroy();
 				$("#myTable").DataTable({
 					language: {
 						// 将表格显示改为中文
@@ -49,7 +91,15 @@
 								// 获得表格对象后，
 								"pageNum": pageNum,
 								// 每页显示数量
-								"pageSize": pageSize
+								"pageSize": pageSize,
+								// 学院
+								"college":college,
+								// 专业信息
+								"major":major,
+								// 职称信息
+								"professor":professor,
+								// 姓名模糊查询
+								"name": name
 							}
 							// 将新增的查询数据扩展到请求参数上
 							$.extend(d, params); //给d扩展参数
@@ -112,12 +162,38 @@
 							data: function (row, type, val, meta) {
 								var deleteBtn = "<a href='javascript:openDeleteModel(" + row.id + ")' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>&nbsp;删除</a>";
 								var detailsBtn = "<a href='javascript:openDetailsModel(" + row.id + ")' class='btn btn-success btn-xs'><i class='fa fa-hand-peace-o'></i>&nbsp;详情</a>";
-								return detailsBtn + "&nbsp;" + deleteBtn;
+								var updateBtn = "<a href='javascript:openUpdateModel(" + row.id + ")' class='btn btn-info btn-xs'><i class='fa fa-language'></i>&nbsp;修改</a>";
+								return detailsBtn + "&nbsp;" + deleteBtn + "&nbsp;" + updateBtn;
 							}
 						}
 					]
 				});
-			});
+			};
+
+			function onchangeCollege() {
+				onchangeTest();
+				var collId = $("#college").val();
+				if (collId == 0) {
+					$("#major").html("<option value=-1>请先选择学院信息</option>")
+					return;
+				}
+				// 获取专业信息
+				$.ajax({
+					url: "getMajor",
+					type: "post",
+					data: {
+						"collId":collId
+					},
+					dataType: "json",
+					success: function (data) {
+						var options = "<option value=0>请选择专业信息</option>"
+						for (var i = 0; i < data.length; i++) {
+							options = options + "<option value=" + data[i].id + ">" + data[i].majorName + "</option>"
+						}
+						$("#major").html(options);
+					}
+				});
+			}
 			// 删除函数
 			function openDeleteModel(id) {
 				var flag = confirm("确定删除该教师信息，删除后该教师发表论文一并删除？");
@@ -154,10 +230,26 @@
 		<div class="container" style="margin: 0px 5px; height: 100%; padding: 10px; background-size: 20px">
 			<div class="row">
 				<div class="col-lg-12">
-					<a href="javascript:openAddModel()" class="btn btn-success">
-						<i class="fa fa-plus"></i>&nbsp;
-						搜索引擎
-					</a>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<select class="form-control" id="college" onchange="onchangeCollege()">
+								<!-- 学院 -->
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<select class="form-control" id="major" onchange="onchangeTest()">
+								<!-- 专业 -->
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<select class="form-control" id="professor" onchange="onchangeTest()">
+								<!-- 职称 -->
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<input type="text" id="name" class="form-control" placeholder="输入姓名查询" onblur="onchangeTest()"/>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="row" style="margin: 5px 20px">

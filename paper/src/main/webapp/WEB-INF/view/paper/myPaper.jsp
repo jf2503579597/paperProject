@@ -116,11 +116,11 @@
 						}, {
 							targets: 4,
 							data: function (row, type, val, meta) {
-								// 作者姓名
-								if (row.user == null || row.user.major == null) {
+								// 论文状态
+								if (row.exam == null) {
 									return null;
 								}
-								return row.user.major.majorName;
+								return row.exam;
 							}
 						}, {
 							targets: 5,
@@ -164,7 +164,7 @@
 				var title = "<i class = 'fa fa-lastfm'></i>&nbsp; 论文详情"
 				var url = "../paper/details?id=" + id;
 				var width = 650;
-				var height = 500;
+				var height = 550;
 				parent.openModel(title, url, width, height)
 			}
 		</script>
@@ -188,7 +188,7 @@
 							<th>标题</th>
 							<th>期号</th>
 							<th>作者</th>
-							<th>作者专业</th>
+							<th>当前状态</th>
 							<th>操作</th>
 						</tr>
 						</thead>

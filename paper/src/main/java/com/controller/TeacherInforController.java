@@ -230,4 +230,19 @@ public class TeacherInforController extends BaseController {
 		boolean flag = professorService.deleteProfessor(professor);
 		return flag;
 	}
+
+	/**
+	 * 异步获取学院信息，根据专业的学院id获取学院信息
+	 * @param collegeId
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("getCollege")
+	@ResponseBody
+	public College getCollege(Long collegeId) throws Exception {
+		College college = new College();
+		college.setId(collegeId);
+		College college1 = collegeService.getCollegeByName(college);
+		return college1;
+	}
 }

@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 教师功能控制层
@@ -85,6 +82,22 @@ public class TeacherController extends BaseController {
 		return list;
 	}
 
+	/**
+	 * 获取教师所在学院、教师职称信息
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/getData")
+	@ResponseBody
+	public Map<String, Object> getData() throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		List<College> collegeList = collegeService.getCollege(new College());
+		map.put("collegeList", collegeList);
+		List<Professor> professorList = professorService.getProfessor();
+		map.put("professorList", professorList);
+		return map;
+	}
+
 	@PostMapping("/addTeacher")
 	@ResponseBody
 	public boolean addTeacher() throws Exception {
@@ -131,10 +144,33 @@ public class TeacherController extends BaseController {
 	 */
 	@PostMapping("/teacherPage")
 	@ResponseBody
-	public PageVO<User> getUserByPageVO(Integer pageNum, Integer pageSize) throws Exception  {
+	public PageVO<User> getUserByPageVO(Integer pageNum, Integer pageSize, Long college,
+	                                    Long major, Long professor, String name) throws Exception  {
 		PageVO<User> pageVO = new PageVO<>();
 		pageVO.setPageNum(pageNum);
 		pageVO.setPageSize(pageSize);
+		User user = new User();
+		if (college != null && college > 0) {
+			College college1 = new College();
+			college1.setId(college);
+			user.setCollege(college1);
+		}
+		if (major != null && major > 0) {
+			Major major1 = new Major();
+			major1.setId(major);
+			user.setMajor(major1);
+		}
+		if (professor != null && professor > 0) {
+			Professor professor1 = new Professor();
+			professor1.setId(professor);
+			user.setProfessor(professor1);
+		}
+		if (name != null && name.length() > 0) {
+			user.setName(name);
+		}
+		List<User> list = new ArrayList<>();
+		list.add(user);
+		pageVO.setList(list);
 		pageVO = userService.getUserByPage(pageVO);
 		return pageVO;
 	}

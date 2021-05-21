@@ -174,7 +174,7 @@
 						<label for="birthday" class="col-sm-1 control-label">生日</label>
 
 						<div class="col-sm-4">
-							<input type="datetime-local" class="form-control" id="birthday">
+							<input type="date" class="form-control" id="birthday">
 						</div>
 
 						<label for="professor" class="col-sm-1 control-label">职称</label>

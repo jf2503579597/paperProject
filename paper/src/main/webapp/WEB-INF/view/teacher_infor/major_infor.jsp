@@ -93,8 +93,28 @@
 								// row 就是该行的数据对象
 								return row.majorName;
 							}
-						}, {
+						},{
 							targets: 2,
+							data: function (row, type, val, meta) {
+								// 用户姓名
+								// row 就是该行的数据对象
+								var name;
+								$.ajax({
+									url:"getCollege",
+									type: "post",
+									data: {
+										"collegeId":row.collId
+									},
+									async: false,
+									dataType:"json",
+									success:function (data) {
+										name = data.collName;
+									}
+								});
+								return name;
+							}
+						}, {
+							targets: 3,
 							data: function (row, type, val, meta) {
 								var deleteBtn = "<a href='javascript:openDeleteModel(" + row.id + ")' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>&nbsp;删除</a>"
 								return deleteBtn;
@@ -104,7 +124,7 @@
 				});
 			});
 			function openAddModel() {
-				var title = "<i class = 'fa fa-plus'></i>&nbsp; 添加刊物类别"
+				var title = "<i class = 'fa fa-plus'></i>&nbsp; 添加专业类别"
 				var url = "../teacher_infor/addMajor";
 				var width = 650;
 				var height = 200;
@@ -150,6 +170,7 @@
 							<tr>
 								<th>序号</th>
 								<th>专业信息</th>
+								<th>所属学院</th>
 								<th>操作</th>
 							</tr>
 						</thead>

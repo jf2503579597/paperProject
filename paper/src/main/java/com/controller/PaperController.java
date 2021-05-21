@@ -4,7 +4,6 @@ import com.controller.base.BaseController;
 import com.pojo.eneity.*;
 import com.pojo.vo.PageVO;
 import com.service.*;
-import javafx.print.PaperSource;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,10 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @MultipartConfig
 @Controller
@@ -37,6 +33,12 @@ public class PaperController extends BaseController {
 	private PeriodicalLevelService periodicalLevelService;  // 期刊级别表
 	@Autowired
 	private ProjectSourceService projectSourceService;      // 项目来源业务层
+	@Autowired
+	private CollegeService collegeService;                  // 学院信息业务层
+	@Autowired
+	private MajorService majorService;                      // 专业信息业务层
+	@Autowired
+	private ProfessorService professorService;              // 职称信息业务层
 
 	/**
 	 * 转发到上传页面
@@ -46,14 +48,18 @@ public class PaperController extends BaseController {
 	@GetMapping("/upload")
 	public String forwardUploadPaper() throws Exception {
 		List<Paper> paperByPaper = paperService.getPaperByPaper(new Paper());
-		Paper paper = paperByPaper.get(paperByPaper.size() - 1);
-		Integer periodNo = Integer.parseInt(paper.getPeriodNo()) + 1;
-		session.setAttribute("periodNo", periodNo);
+		if (paperByPaper != null && !paperByPaper.isEmpty()) {
+			Paper paper = paperByPaper.get(paperByPaper.size() - 1);
+			Integer periodNo = Integer.parseInt(paper.getPeriodNo()) + 1;
+			session.setAttribute("periodNo", periodNo);
+		} else {
+			session.setAttribute("periodNo", "17033100");
+		}
 		return "/paper/upload";
 	}
 
 	/**
-	 * 获取类别、学科、期刊级别、项目来源信息
+	 * 获取类别、学科、期刊级别、项目来源、教师所在学院、教师所在专业、教师职称信息
 	 * @return
 	 * @throws Exception
 	 */
@@ -69,6 +75,10 @@ public class PaperController extends BaseController {
 		map.put("periodicalLevelList", periodicalLevelList);
 		List<ProjectSource> projectSourceList = projectSourceService.getProjectSource();
 		map.put("projectSourceList", projectSourceList);
+		List<College> collegeList = collegeService.getCollege(new College());
+		map.put("collegeList", collegeList);
+		List<Professor> professorList = professorService.getProfessor();
+		map.put("professorList", professorList);
 		return map;
 	}
 
@@ -131,18 +141,65 @@ public class PaperController extends BaseController {
 	}
 
 	/**
-	 * 根据分页信息查询论文
+	 * 根据分页信息以及对应的论文信息查询论文
 	 * @param pageNum
 	 * @param pageSize
 	 * @return
 	 */
 	@PostMapping("/paperPage")
 	@ResponseBody
-	public PageVO<Paper> getPaperList(Integer pageNum, Integer pageSize, boolean isCheck) throws Exception {
-		System.out.println(isCheck);
+	public PageVO<Paper> getPaperList(Integer pageNum, Integer pageSize,
+	                                  boolean isCheck, Long periodical, Long subject,
+	                                  Long periodicalLevel, Long projectSource, Long college,
+	                                  Long major, Long professor, String name) throws Exception {
 		PageVO<Paper> pageVO = new PageVO<>();
 		pageVO.setPageNum(pageNum);
 		pageVO.setPageSize(pageSize);
+		Paper paper = new Paper();
+		User user = new User();
+		if (periodical != null && periodical != 0) {
+			Periodical periodical1 = new Periodical();
+			periodical1.setId(periodical);
+			paper.setPeriodical(periodical1);
+		}
+		if (subject != null && subject != 0) {
+			Subject subject1 = new Subject();
+			subject1.setId(subject);
+			paper.setSubject(subject1);
+		}
+		if (periodicalLevel != null && periodicalLevel != 0) {
+			PeriodicalLevel periodicalLevel1 = new PeriodicalLevel();
+			periodicalLevel1.setId(periodicalLevel);
+			paper.setPeriodicalLevel(periodicalLevel1);
+		}
+		if (projectSource != null && projectSource != 0) {
+			ProjectSource projectSource1 = new ProjectSource();
+			projectSource1.setId(projectSource);
+			paper.setProjectSource(projectSource1);
+		}
+
+		if (college != null && college > 0) {
+			College college1 = new College();
+			college1.setId(college);
+			user.setCollege(college1);
+		}
+		if (major != null && major > 0) {
+			Major major1 = new Major();
+			major1.setId(major);
+			user.setMajor(major1);
+		}
+		if (professor != null && professor > 0) {
+			Professor professor1 = new Professor();
+			professor1.setId(professor);
+			user.setProfessor(professor1);
+		}
+		if (name != null && name.length() > 0) {
+			user.setName(name);
+		}
+		paper.setUser(user);
+		List<Paper> paperList = new ArrayList<>();
+		paperList.add(paper);
+		pageVO.setList(paperList);
 		pageVO = paperService.getPaperByPage(pageVO, isCheck, null);
 		return pageVO;
 	}
@@ -200,6 +257,22 @@ public class PaperController extends BaseController {
 	}
 
 	/**
+	 * 拒绝论文
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/fail")
+	@ResponseBody
+	public boolean fail(Long id, String examFile) throws Exception {
+		Paper paper = new Paper();
+		paper.setId(id);
+		paper.setExam("审核失败");
+		paper.setExamFile(examFile);
+		boolean b = paperService.checkPaper(paper);
+		return b;
+	}
+
+	/**
 	 * 删除论文
 	 * @return
 	 * @throws Exception
@@ -235,7 +308,7 @@ public class PaperController extends BaseController {
 	}
 
 	/**
-	 * 根据分页信息查询论文
+	 * 根据分页信息查询我的论文
 	 * @param pageNum
 	 * @param pageSize
 	 * @return

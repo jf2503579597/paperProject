@@ -43,7 +43,7 @@
 			<trim suffixOverrides="and">
 				<if test="id != null">u.id = #{id} and </if>
 				<if test="card != null">u.card = #{card} and </if>
-				<if test="name != null">u.name = #{name} and </if>
+				<if test="name != null">u.name like concat('%', #{name}, '%') and </if>
 				<if test="professor != null">u.professor_id = #{professor.id} and </if>
 				<if test="college != null">u.college_id = #{college.id} and </if>
 				<if test="major != null">u.major_id = #{major.id} and </if>

@@ -74,6 +74,9 @@ public class PaperServiceImpl implements PaperService {
 	@Override
 	public PageVO<Paper> getPaperByPage(PageVO<Paper> pageVO, boolean isCheck, User user) throws Exception {
 		Paper paper = new Paper();
+		if (pageVO.getList() != null && !pageVO.getList().isEmpty()) {
+			paper = pageVO.getList().get(0);
+		}
 		Integer pageNum = (pageVO.getPageNum() - 1) * pageVO.getPageSize();
 		Integer pageSize = pageVO.getPageSize();
 		paper.setPageNum(pageNum);

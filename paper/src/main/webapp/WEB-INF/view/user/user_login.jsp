@@ -36,14 +36,20 @@
 				alert("抱歉，该系统不支持注册！请找管理员登记！")
 			}
 		</script>
+		<style>
+			#myBody{
+				background-image: url("../static/img/img.png");
+				height: 500px;
+			}
+		</style>
 	</head>
-	<body class="hold-transition login-page">
+	<body class="hold-transition login-page;" id="myBody" >
 		<div class="login-box">
 			<div class="login-logo">
-				<a href="#"><b>科研论文</b>管理系统</a>
+				<a href="#" style="color: white; text-shadow: 2px 2px 2px skyblue"><b>科研论文</b>管理系统</a>
 			</div>
 			<div class="login-box-body">
-				<p class="login-box-msg">请输入您的信息登录系统</p>
+				<p class="login-box-msg" style="font-family: 宋体; font-size: 16px">请输入您的信息登录系统</p>
 				<form>
 					<div class="form-group has-feedback">
 						<input type="text" id="card" name="username" class="form-control" placeholder="请输入您的工号">

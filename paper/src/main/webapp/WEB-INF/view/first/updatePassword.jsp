@@ -62,7 +62,7 @@
 				<div class="box-header with-border">
 					<h3 class="box-title">请在下面修改您的密码</h3>
 				</div>
-				<form class="col-md-10" style="transform: translate(100px, 30px)">
+				<form class="col-md-8" style="transform: translate(100px, 30px)">
 					<div class="box-body">
 						<div class="form-group">
 							<label for="oldPassword">旧密码</label>

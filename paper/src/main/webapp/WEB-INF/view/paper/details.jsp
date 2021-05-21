@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <html>
 <head>
 	<title>Title</title>
@@ -103,6 +104,18 @@
 				${paperById.exam}
 			</td>
 		</tr>
+		<c:choose>
+			<c:when test="${paperById.examFile != null}">
+				<tr>
+					<td style="text-align: right">
+						审核失败理由：
+					</td>
+					<td>
+						${paperById.examFile}
+					</td>
+				</tr>
+			</c:when>
+		</c:choose>
 
 <%--		<tr>--%>
 <%--			<td colspan="2" style="text-align: right;">--%>

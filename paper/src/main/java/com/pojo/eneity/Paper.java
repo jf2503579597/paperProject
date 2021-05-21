@@ -25,7 +25,10 @@ public class Paper extends BaseEntity implements Serializable {
 	private ProjectSource projectSource;                // 项目来源
 	private User user;                                  // 作者
 	private String exam;                                // 审核状态
+	private String examFile;                            // 审核失败理由
 	private Date createTime;                            // 创建时间
 	private Date updateTime;                            // 修改时间
 	private String downloadAddress;                     // 下载路径
+
+	private String createYear;                              // 创建时间年份
 }
